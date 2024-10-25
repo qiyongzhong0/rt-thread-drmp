@@ -102,10 +102,10 @@ rt_size_t drmp_vcom_read(rt_device_t dev, rt_off_t pos, void *buffer, rt_size_t 
 
 const struct rt_device_ops drmp_vcom_ops = {
     NULL,
-    drmp_vcom_open,
-    drmp_vcom_close,
-    drmp_vcom_read,
-    drmp_vcom_write,
+    (void *)drmp_vcom_open,
+    (void *)drmp_vcom_close,
+    (void *)drmp_vcom_read,
+    (void *)drmp_vcom_write,
     NULL
 };
 
@@ -158,10 +158,10 @@ int drmp_vcom_add(drmp_t *drmp, int ch, const char *vcom_name, int rx_fifo_size,
     vcom->parent.ops = &drmp_vcom_ops;
 #else
     vcom->parent.init = NULL;
-    vcom->parent.open = drmp_vcom_open;
-    vcom->parent.close = drmp_vcom_close;
-    vcom->parent.read = drmp_vcom_read;
-    vcom->parent.write = drmp_vcom_write;
+    vcom->parent.open = (void *)drmp_vcom_open;
+    vcom->parent.close = (void *)drmp_vcom_close;
+    vcom->parent.read = (void *)drmp_vcom_read;
+    vcom->parent.write = (void *)drmp_vcom_write;
     vcom->parent.control = NULL;
 #endif
 
