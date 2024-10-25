@@ -13,53 +13,28 @@
 #include <rtthread.h>
 #include <string.h>
 #include <stdio.h>
-#include <fw_info.h>
-#include <param.h>
-#include <acc_app.h>
-
-#ifdef ACC_USING_TRANS
-extern bool app_acc_trans_dev_setup(const char *name);
-extern void app_acc_trans_dev_remove(void);
-#endif
 
 #define DRMP_TCP_NAME       "drmp_tcp"
-
-#ifdef PARAM_USING_INDEX
-static char *drmp_ip_get(void)
-{
-    static char drmp_ip[32] = {0};
-    param_read_by_index(PIDX_DRMP_IP, drmp_ip, sizeof(drmp_ip));
-    return(drmp_ip);
-}
-static int drmp_port_get(void)
-{
-    int drmp_port = 5188;
-    param_read_by_index(PIDX_DRMP_PORT, &drmp_port, sizeof(drmp_port));
-    return(drmp_port);
-}
-#define DRMP_MSTA_IP        drmp_ip_get()//主站地址/域名
-#define DRMP_MSTA_PORT      drmp_port_get()//主站端口
-#else
 #define DRMP_MSTA_IP        "101.37.77.232"//"72c211ee6ee9ca68.natapp.cc"//主站地址/域名
 #define DRMP_MSTA_PORT      5188//主站端口
-#endif
+#define DRMP_MAC_STR        "112233445566"
+#define DRMP_PRODUCT_STR    "dtu-hv1.0-n32g452re"
+#define DRMP_VER_STR        "v1.00-2024.10.25"
 
 static rt_device_t console_dev_old = NULL;
 
 static drmp_rst_t drmp_get_reg_str_cb(char *str)
 {
-    u8 mac[6];
-    param_read_by_index(PIDX_DTU_MAC, mac, sizeof(mac));
-    sprintf(str, "mac:%02X%02X%02X%02X%02X%02X,", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+    sprintf(str, "mac:%s,", DRMP_MAC_STR);
     str += strlen(str);
 
-    sprintf(str, "product:%s-%s-%s,", FW_INFO_PRODUCT, FW_INFO_PCB, FW_INFO_MCU);
+    sprintf(str, "product:%s,", DRMP_PRODUCT_STR);
     str += strlen(str);
     
-    sprintf(str, "fw-ver:%s-%s,", FW_INFO_SOFT_VER, FW_INFO_SOFT_DATE);
+    sprintf(str, "fw-ver:%s,", DRMP_VER_STR);
     str += strlen(str);
 
-    sprintf(str, "ch1:console,ch2:rs485");
+    sprintf(str, "ch1:console");
 
     return(DRMP_RST_OK);
 }
@@ -101,20 +76,6 @@ static drmp_rst_t drmp_open_ch_cb(drmp_t *drmp, int ch)
         }
         finsh_set_device(name);
         break;
-    case 2:
-        if (drmp_vcom_add(drmp, ch, name, 1280, 512, 0) != 0)
-        {
-            rst = DRMP_RST_FAIL;
-            break;
-        }
-        #ifdef ACC_USING_TRANS
-        if ( ! app_acc_trans_dev_setup(name))
-        {
-            rst = DRMP_RST_FAIL;
-            break;
-        }
-        #endif
-        break;
     default:
         rst = DRMP_RST_CH_NO;
         break;
@@ -136,12 +97,6 @@ static drmp_rst_t drmp_close_ch_cb(drmp_t *drmp, int ch)
         rt_console_set_device(console_dev_old->parent.name);
         finsh_set_device(console_dev_old->parent.name);
         console_dev_old = NULL;
-        drmp_vcom_remove(drmp->vcoms[ch]);
-        break;
-    case 2:
-        #ifdef ACC_USING_TRANS
-        app_acc_trans_dev_remove();
-        #endif
         drmp_vcom_remove(drmp->vcoms[ch]);
         break;
     default:
