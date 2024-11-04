@@ -40,7 +40,7 @@ typedef enum{
     DRMP_CC_OPEN,               //打开通道
     DRMP_CC_CLOSE,              //关闭通道
     DRMP_CC_CFG                 //配置通道
-}drmp_ctrl_cmd_t;//控制协议命令定义
+}drmp_ctrl_cmd_t;//控制回调命令定义
  
 typedef enum{
     DRMP_RST_OK = 0,            //成功
