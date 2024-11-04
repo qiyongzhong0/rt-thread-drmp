@@ -164,6 +164,6 @@ typedef struct{
 ## 3. 联系方式
 
 * 维护：qiyongzhong
-* 主页：https://github.com/qiyongzhong0/rt-thread-bt_ecb02c
-* 主页：https://gitee.com/qiyongzhong0/rt-thread-bt_ecb02c
+* 主页：https://github.com/qiyongzhong0/rt-thread-drmp
+* 主页：https://gitee.com/qiyongzhong0/rt-thread-drmp
 * 邮箱：917768104@qq.com
