@@ -15,7 +15,7 @@
 #define DRMP_USING_SOCKET
 //#define DRMP_USING_MASTER
 #define DRMP_USING_SLAVE
-#define DRMP_USING_SAMPLE
+//#define DRMP_USING_SAMPLE
 
 #ifndef DRMP_VCOM_TOTAL
 #define DRMP_VCOM_TOTAL             2       //虚拟接口总数，最少2个
