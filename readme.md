@@ -150,7 +150,7 @@ typedef struct{
 ### 2.3获取组件
 
 - **方式1：**
-通过 *Env配置工具* 或 *RT-Thread studio* 开启软件包，根据需要配置各项参数；配置路径为 *RT-Thread online packages -> peripherals packages -> drmp* 
+通过 *Env配置工具* 或 *RT-Thread studio* 开启软件包，根据需要配置各项参数；配置路径为 *RT-Thread online packages -> miscellaneous packages -> drmp* 
 
 
 ### 2.4配置参数说明
